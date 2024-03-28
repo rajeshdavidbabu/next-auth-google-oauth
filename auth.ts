@@ -79,6 +79,9 @@ export const config = {
       console.log('Incoming session info: ', session);
       // This will be accessible in the client side using useSession hook
       // So becareful what you return here. Don't return sensitive data.
+      // The auth() function should return jwt response but instead it returns
+      // the session object. This is a bug in next-auth.
+      // Follow this bug https://github.com/nextauthjs/next-auth/issues/9329
       return {
         ...session,
         accessToken: String(token.access_token),
