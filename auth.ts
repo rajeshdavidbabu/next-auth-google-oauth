@@ -37,7 +37,7 @@ export const config = {
           ...token,
           access_token: account.access_token,
           issued_at: Date.now(),
-          expires_at: Date.now() + Number(account.expires_in) * 1000,
+          expires_at: Date.now() + Number(account.expires_in) * 1000, // 3600 seconds
           refresh_token: account.refresh_token,
         };
       } else if (Date.now() < Number(token.expires_at)) {
@@ -67,7 +67,7 @@ export const config = {
             // Fall back to old refresh token, but note that
             // many providers may only allow using a refresh token once.
             refresh_token: tokens.refresh_token ?? token.refresh_token,
-          };
+          }; // updated inside our session-token cookie
         } catch (error) {
           console.error('Error refreshing access token', error);
           // The error property will be used client-side to handle the refresh token error
@@ -77,7 +77,8 @@ export const config = {
     },
     async session({ session, token }) {
       console.log('Incoming session info: ', session);
-
+      // This will be accessible in the client side using useSession hook
+      // So becareful what you return here. Don't return sensitive data.
       return {
         ...session,
         accessToken: String(token.access_token),
